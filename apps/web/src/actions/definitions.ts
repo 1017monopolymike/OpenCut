@@ -208,3 +208,21 @@ export function getDefaultShortcuts(): Map<
 
 	return shortcuts;
 }
+
+const ACTIONS_WITH_REQUIRED_ARGS: ReadonlySet<string> = new Set([
+	"remove-media-asset",
+	"remove-media-assets",
+]);
+
+/**
+ * Runtime type guard for `TActionWithOptionalArgs`. Returns true when the
+ * value is a known action that can be invoked with no/undefined arguments
+ * (i.e. excludes actions whose argument map entry is required).
+ */
+export function isActionWithOptionalArgs(
+	value: unknown,
+): value is TActionWithOptionalArgs {
+	if (typeof value !== "string") return false;
+	if (!Object.hasOwn(ACTIONS, value)) return false;
+	return !ACTIONS_WITH_REQUIRED_ARGS.has(value);
+}
